@@ -12,15 +12,10 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:8000"}})
 # Encryption key
 key = b'ZXR9XZicngAyKUDLxNRTYSGN7cMk-k2qn_lww6FB2BY='
 
-# Function to encrypt a path
-def encrypt_path(path):
-    fernet = Fernet(key)
-    return fernet.encrypt(path.encode()).decode()
+fernet = Fernet(key)
 
-# Function to decrypt an encrypted path
-def decrypt_path(encrypted_path):
-    fernet = Fernet(key)
-    return fernet.decrypt(encrypted_path.encode()).decode()
+encrypt_path = lambda path: fernet.encrypt(path.encode()).decode()
+decrypt_path = lambda path: fernet.decrypt(path.encode()).decode()
 
 # Function to find immediate files and folders in a directory
 def find_files_and_folders(directory):
