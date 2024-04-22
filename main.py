@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, render_template
 from cryptography.fernet import Fernet
 from configparser import ConfigParser
 from flask_cors import CORS
@@ -39,18 +39,20 @@ def generate_json(directory):
     return json_data
 
 
-# Route to display encoded paths for immediate files and folders in the 'content' directory
 @app.route('/')
-def display_encoded_paths():
-    json_data = generate_json('')
-    return jsonify(json_data)
+def display_index():
+    return render_template('index.html')
 
 
-# Route to serve JSON content for a directory or serve images
+@app.route('/admin', host='127.0.0.1')
+def display_admin():
+    return render_template('admin.html')
+
+
 @app.route('/<path:encoded_path>')
 def serve_json_or_image(encoded_path):
     try:
-        directory = decrypt_path(encoded_path)  # Decrypt the encoded path
+        directory = decrypt_path(encoded_path)
         full_directory = os.path.join(basedir, directory)
 
         if os.path.isdir(full_directory):
@@ -76,4 +78,5 @@ def serve_json_or_image(encoded_path):
 
 
 if __name__ == '__main__':
+    print(f'root encryped path:\n{encrypt_path("")}')
     app.run(debug=True, host='0.0.0.0')
