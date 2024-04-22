@@ -1,16 +1,21 @@
 from flask import Flask, jsonify, send_from_directory
 from cryptography.fernet import Fernet
-import os
+from configparser import ConfigParser
 from flask_cors import CORS
+import os
+
+
+config = ConfigParser()
+config.read('config.ini')
+
+key = config['values']['key'].encode('utf-8')
+basedir = config['values']['basedir']
 
 
 app = Flask(__name__)
 
-
 CORS(app, resources={r"/*": {"origins": "http://localhost:8000"}})
 
-# Encryption key
-key = b'ZXR9XZicngAyKUDLxNRTYSGN7cMk-k2qn_lww6FB2BY='
 
 fernet = Fernet(key)
 
